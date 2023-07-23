@@ -1,21 +1,48 @@
 package main
 
 import (
-	"log"
+	"fmt"
 
+	"github.com/haveachin/infrared/pkg/config"
 	ir "github.com/haveachin/infrared/pkg/infrared"
+	"github.com/rs/zerolog/log"
+	"github.com/spf13/pflag"
 )
 
+var (
+	configPath = "config.yml"
+)
+
+func initFlags() {
+	pflag.StringVarP(&configPath, "config", "c", configPath, "path to config file")
+	pflag.Parse()
+}
+
+func init() {
+	initFlags()
+}
+
 func main() {
+	if err := run(); err != nil {
+		log.Fatal().
+			Err(err)
+	}
+}
+
+func run() error {
+	cfg, err := config.NewFromPath(configPath, nil)
+	if err != nil {
+		return fmt.Errorf("config: %w", err)
+	}
+
+	cfgMap, err := cfg.Read()
+	if err != nil {
+		return fmt.Errorf("read config: %w", err)
+	}
+
 	srv := ir.New(
-		ir.AddListenerConfig(
-			ir.WithListenerBind(":25565"),
-		),
-		ir.AddServerConfig(
-			ir.WithServerDomains("*"),
-			ir.WithServerAddress(":25566"),
-		),
+		ir.AddConfigFromMap(cfgMap),
 	)
 
-	log.Println(srv.ListenAndServe())
+	return srv.ListenAndServe()
 }

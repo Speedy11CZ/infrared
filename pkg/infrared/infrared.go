@@ -38,6 +38,12 @@ func AddServerConfig(fns ...ServerConfigFunc) ConfigFunc {
 	}
 }
 
+func AddConfigFromMap(cfg map[string]any) ConfigFunc {
+	return func(cfg *Config) {
+
+	}
+}
+
 type Infrared struct {
 	cfg Config
 

@@ -1,0 +1,11 @@
+# Provides provide configuration files/options for Infrared
+#
+providers:
+  # Config files that Infrared should read from.
+  #
+  file:
+    # The directories that Infrared should read configs from.
+    #
+    directories: 
+      directory: ./configs
+      watch: true

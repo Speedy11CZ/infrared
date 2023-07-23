@@ -1,0 +1,10 @@
+listeners:
+  default:
+    bind: :25565
+
+servers:
+  -
+    domains:
+      - "*"
+    addresses:
+      - :25566

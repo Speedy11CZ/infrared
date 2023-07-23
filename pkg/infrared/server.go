@@ -33,15 +33,15 @@ func WithServerDomains(dd ...ServerDomain) ServerConfigFunc {
 	}
 }
 
-func WithServerAddress(addr ServerAddress) ServerConfigFunc {
+func WithServerAddresses(addr ...ServerAddress) ServerConfigFunc {
 	return func(cfg *ServerConfig) {
-		cfg.Address = addr
+		cfg.Addresses = addr
 	}
 }
 
 type ServerConfig struct {
-	Domains []ServerDomain `mapstructure:"domains"`
-	Address ServerAddress  `mapstructure:"address"`
+	Domains   []ServerDomain  `mapstructure:"domains"`
+	Addresses []ServerAddress `mapstructure:"address"`
 }
 
 type Server struct {
@@ -70,7 +70,7 @@ func NewServer(fns ...ServerConfigFunc) *Server {
 }
 
 func (s Server) Dial() (*conn, error) {
-	c, err := net.Dial("tcp", string(s.cfg.Address))
+	c, err := net.Dial("tcp", string(s.cfg.Addresses[0]))
 	if err != nil {
 		return nil, err
 	}
